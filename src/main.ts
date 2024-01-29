@@ -1,6 +1,10 @@
-import './assets/main.scss'
+import './assets/main.scss';
+// 饿了么缺失的css
+import 'element-plus/theme-chalk/el-loading.css';
+import 'element-plus/theme-chalk/el-message-box.css';
+import 'element-plus/theme-chalk/el-message.css';
 
-import { createApp } from 'vue'
+import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 
 import App from './App.vue'

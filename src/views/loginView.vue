@@ -26,18 +26,20 @@
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router';
+
 const router = useRouter();
 
 // 登录(简易版)
 const toLogin = () => {
   router.push('/home')
 }
+
 </script>
 
 <style lang="scss" scoped>
 #login {
   height: 100vh;
-  background: linear-gradient(to right, #2b2c43, #1e3158);
+  background: linear-gradient(to right, rgb(33, 81, 138), rgb(76, 101, 151));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,7 +66,7 @@ const toLogin = () => {
       .input {
         height: 40px;
 
-        :deep(.el-input__wrapper){
+        :deep(.el-input__wrapper) {
           border-radius: 20px;
           // border: 1px solid #000;
         }
@@ -92,3 +94,4 @@ const toLogin = () => {
   }
 }
 </style>
+../apis/login
