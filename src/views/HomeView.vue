@@ -2,11 +2,11 @@
   <div class="home-content">
     <!-- 左边联系人 -->
     <div class="contacts">
-      <ContactsView @selectChange="selectChange" />
+      <ContactsView @selectChange="selectChange" ref="ContactsViewRef" />
     </div>
     <!-- 右边对话框 -->
     <div class="dialogue">
-      <DialogueView ref="DialogueViewRef" />
+      <DialogueView @submitAll="submitAll" ref="DialogueViewRef" />
     </div>
   </div>
 </template>
@@ -17,9 +17,15 @@ import DialogueView from '@/views/homeComponents/dialogueView.vue';
 import { nextTick, ref } from 'vue';
 
 // 左边粉丝选中传值
-const DialogueViewRef = ref()
+const DialogueViewRef = ref<InstanceType<typeof DialogueView>>()
 const selectChange = (val: number) => {
-  nextTick(() => DialogueViewRef.value.openDialog(val))
+  nextTick(() => DialogueViewRef.value?.openDialog(val))
+}
+
+const ContactsViewRef = ref<InstanceType<typeof ContactsView>>()
+// 右边提交传递id过来清除左边组件的列表对应数据
+const submitAll = (id: number) => {
+  nextTick(() => ContactsViewRef.value?.openDialog(id))
 }
 </script>
 

@@ -26,12 +26,26 @@
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router';
+import { ElMessage, ElLoading } from 'element-plus'
+import { useUserInfoStore } from '@/stores/userInfo';
 
+const userInfoStore = useUserInfoStore()
 const router = useRouter();
 
 // 登录(简易版)
-const toLogin = () => {
-  router.push('/home')
+const toLogin = async () => {
+  const loading = ElLoading.service({
+    lock: true,
+    text: '登录中',
+  })
+  // ... 登录流程
+  userInfoStore.setAuth('test1') //存token
+  await loading.close()
+  setTimeout(() => {
+    ElMessage.success('登录成功')
+    router.push('/home')
+  }, 500)
+
 }
 
 </script>

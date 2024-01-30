@@ -27,6 +27,20 @@ export type querySessionType = {
     fansId: number //粉丝id
 }
 
+// 会话分页列表类型
+export type sessionListType = {
+    id: number
+    platformId: number
+    bloggerId: number
+    fansId: number
+    role: string
+    content: string
+    fixContentArr: Array<unknown>
+    flag: number
+    remark: string
+    createTime: string
+}
+
 /* 
     -------------------------------------------------------------------------------------------------------------
     分界线（↑ TS类型， ↓ 接口）
@@ -43,10 +57,27 @@ export const getFansList = (data: fansType) => {
 }
 
 // 查询会话接口
-export const getQuerySession = (data: querySessionType) => {
+export const getQuerySessionApi = (data: querySessionType) => {
     return requests({
         method: 'GET',
         url: '/app-api/conduct/conversation/page',
         params: data
+    })
+}
+
+// 修改会话
+export const submitModifyApi = (data: { id: number, fixContentArr: string[] }) => {
+    return requests({
+        method: 'POST',
+        url: '/app-api/conduct/conversation/fix-content',
+        data: data
+    })
+}
+
+// 提交会话
+export const submitToApi = (id: number) => {
+    return requests({
+        method: 'POST',
+        url: '/app-api/conduct/fans/replay-status/' + id + '/committed',
     })
 }

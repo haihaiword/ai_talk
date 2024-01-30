@@ -36,6 +36,16 @@ const state = reactive({
     selectVal: null as unknown as number, // 选中的联系人
 })
 
+// 右边组件提交传值
+const openDialog = (id: number) => {
+    // 手动移除，避免多次调用接口
+    // state.list = state.list.filter(obj => obj.id !== id);
+    const index = state.list.findIndex(obj => obj.id === id);
+    if (index !== -1) {
+        state.list.splice(index, 1);
+    }
+}
+
 // 查询列表
 const getList = async () => {
     let res = await getFansList(state.params)
@@ -47,6 +57,7 @@ const getList = async () => {
 
 // 选中联系人
 const toSelected = (val: number, item: fansListType) => {
+    if (state.selectVal === val) return
     // 改变样式
     state.selectVal = val
     // 选中的粉丝账号发送出去
@@ -61,9 +72,13 @@ const load = () => {
     }
 }
 
-
+// 挂载拉取粉丝列表
 onMounted(() => {
     getList()
+})
+
+defineExpose({
+    openDialog
 })
 </script>
 
