@@ -15,6 +15,8 @@
                         </div>
                         <!-- 修改按钮 -->
                         <div class="edit-mess-box" v-if="item.role === 'user'">
+                            <el-button :icon="Close" type="danger" @click="CloseView"
+                                v-if="state.messCheckedVal === item.id" circle />
                             <el-button :icon="Check" @click="submitModify" v-if="state.messCheckedVal === item.id" circle />
                             <el-button circle type="primary" v-if="state.messCheckedVal !== item.id"
                                 @click="selectMessage(item)" plain>修</el-button>
@@ -55,17 +57,20 @@
         </div>
         <el-empty style="margin-top: 200px;" v-if="!state.valuePresent" description="暂无聊天记录" />
         <!-- 底下確認button -->
-        <el-button type="primary" @click="toSubmitAll" v-if="state.valuePresent" class="btn">提交</el-button>
+        <div>
+            <el-button type="primary" @click="toSubmitAll" v-if="state.valuePresent" class="btn">提交</el-button>
+            <el-button type="danger" @click="deleteFans" v-if="state.valuePresent" class="btn">删除</el-button>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 // 引入方法
-import { Check } from '@element-plus/icons-vue'
+import { Check, Close } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { reactive } from 'vue';
 // 引入接口
-import { getQuerySessionApi, submitModifyApi, submitToApi, type sessionListType } from '@/apis/home'
+import { getQuerySessionApi, submitModifyApi, submitToApi, deleteApi, type sessionListType } from '@/apis/home'
 
 // 自定义变量
 const emit = defineEmits(['submitAll'])
@@ -89,6 +94,41 @@ const state = reactive({
 const url = {
     robot: new URL('@/assets/images/robot.png', import.meta.url).href,
     user: new URL('@/assets/images/user.png', import.meta.url).href,
+}
+
+// 取消
+const CloseView = () => {
+    // 重置
+    state.messCheckedVal = undefined as unknown as number //选中要修改的
+    state.messModifyList = [{ content: '' }] //修改用的数组
+}
+
+// 删除
+const deleteFans = () => {
+    ElMessageBox.confirm(
+        '确认删除当前粉丝对话吗?',
+        '提示',
+        {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
+        .then(() => {
+            deleteFansMethods()
+        })
+        .catch(() => {
+
+        })
+}
+const deleteFansMethods = async () => {
+    let res = await deleteApi(state.params.fansId)
+    if (res.data) {
+        ElMessage.success('删除成功')
+        state.valuePresent = false
+        emit('submitAll', state.params.fansId)
+        resetView()
+    }
 }
 
 // 提交修改后的语句上去保存
@@ -391,6 +431,7 @@ defineExpose({
     .btn {
         width: 100px;
         margin: 20px 0;
+        margin-right: 50px;
     }
 }
 </style>

@@ -81,3 +81,12 @@ export const submitToApi = (id: number) => {
         url: '/app-api/conduct/fans/replay-status/' + id + '/committed',
     })
 }
+
+// 删除粉丝
+export const deleteApi = (id: number) => {
+    return requests({
+        method: 'DELETE',
+        url: '/app-api/conduct/fans/delete?id=' + id,
+        // data: { id: id }
+    })
+}

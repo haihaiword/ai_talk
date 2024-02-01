@@ -2,8 +2,8 @@
     <div class="contacts-content">
         <el-scrollbar>
             <div v-infinite-scroll="load">
-                <div class="list-box" :class="state.selectVal === index ? 'select-style' : ''"
-                    @click="toSelected(index, item)" v-for="(item, index) in state.list" :key="index">
+                <div class="list-box" :class="state.selectVal === item.id ? 'select-style' : ''"
+                    @click="toSelected(item.id)" v-for="(item, index) in state.list" :key="index">
                     <div class="list-name">
                         <div class="seat"></div>
                         {{ item.nickName }}
@@ -30,7 +30,7 @@ const state = reactive({
     list: [] as fansListType[], //存储列表
     params: {
         pageNo: 1,
-        pageSize: 10
+        pageSize: 20
     },
     total: 0, //总数
     selectVal: null as unknown as number, // 选中的联系人
@@ -39,7 +39,6 @@ const state = reactive({
 // 右边组件提交传值
 const openDialog = (id: number) => {
     // 手动移除，避免多次调用接口
-    // state.list = state.list.filter(obj => obj.id !== id);
     const index = state.list.findIndex(obj => obj.id === id);
     if (index !== -1) {
         state.list.splice(index, 1);
@@ -56,12 +55,12 @@ const getList = async () => {
 }
 
 // 选中联系人
-const toSelected = (val: number, item: fansListType) => {
+const toSelected = (val: number) => {
     if (state.selectVal === val) return
     // 改变样式
     state.selectVal = val
     // 选中的粉丝账号发送出去
-    emit('selectChange', item.id)
+    emit('selectChange', val)
 }
 
 // 加载更多
