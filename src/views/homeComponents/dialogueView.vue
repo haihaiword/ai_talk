@@ -9,14 +9,14 @@
             <el-scrollbar>
                 <!-- 饿了么的加载更多方法 -->
                 <div v-infinite-scroll="load">
-                    <div class="message-box" :class="item.role === 'assistant' ? 'mess-left' : 'mess-right'"
+                    <div class="message-box" :class="item.role === 'assistant' ? 'mess-right' : 'mess-left'"
                         v-for="(item, index) in state.list" :key="index">
                         <!-- 左边的头像 -->
-                        <div class="mess-image" v-if="item.role === 'assistant'">
+                        <div class="mess-image" v-if="item.role === 'user'">
                             <el-image :src="url.user" fit="cover" />
                         </div>
                         <!-- 修改按钮 -->
-                        <div class="edit-mess-box" v-if="item.role === 'user'">
+                        <div class="edit-mess-box" v-if="item.role === 'assistant'">
                             <el-button :icon="Close" type="danger" @click="CloseView"
                                 v-if="state.messCheckedVal === item.id" circle />
                             <el-button :icon="Check" @click="submitModify" v-if="state.messCheckedVal === item.id" circle />
@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         <!-- 右边的头像 -->
-                        <div class="mess-image" v-if="item.role === 'user'">
+                        <div class="mess-image" v-if="item.role === 'assistant'">
                             <el-image :src="url.robot" fit="cover" />
                         </div>
                     </div>
