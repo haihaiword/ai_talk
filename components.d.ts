@@ -7,8 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    ContactsView: typeof import('./src/components/contactsView.vue')['default']
-    DialogueView: typeof import('./src/components/dialogueView.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElForm: typeof import('element-plus/es')['ElForm']

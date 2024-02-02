@@ -1,5 +1,7 @@
 <template>
     <div class="dialogue-content">
+        <div class="logout"><el-button type="danger" @click="toLogout" :icon="SwitchButton">登出</el-button></div>
+
         <!-- 頂部回話欄 -->
         <div v-if="state.valuePresent" class="dialog-box">
             <!-- 消息盒子 -->
@@ -69,6 +71,9 @@
 import { Check, Close } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { reactive } from 'vue';
+import { SwitchButton } from '@element-plus/icons-vue'
+import { logoutApi } from '@/apis/login'
+import { requests } from "@/utils/request";
 // 引入接口
 import { getQuerySessionApi, submitModifyApi, submitToApi, deleteApi, type sessionListType } from '@/apis/home'
 
@@ -94,6 +99,31 @@ const state = reactive({
 const url = {
     robot: new URL('@/assets/images/robot.png', import.meta.url).href,
     user: new URL('@/assets/images/user.png', import.meta.url).href,
+}
+
+// 退出登录
+const toLogout = () => {
+    ElMessageBox.confirm(
+        '确认退出登录？',
+        '提示',
+        {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
+        .then(async () => {
+            let res = await logoutApi()
+            if (res.data) {
+                // 退出登录并跳转到登录页
+                localStorage.clear()
+                delete requests.defaults.headers.common.Authorization
+                window.location.href = '/login';
+            }
+        })
+        .catch(() => {
+
+        })
 }
 
 // 取消
@@ -326,6 +356,13 @@ defineExpose({
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+
+    .logout {
+        text-align: right;
+        width: 100%;
+        padding-right: 20px;
+        padding-top: 5px;
+    }
 
     .bgc-b {
         background-color: rgb(190, 219, 255);

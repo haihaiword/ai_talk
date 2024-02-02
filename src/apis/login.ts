@@ -13,3 +13,11 @@ export const loginApi = (data: loginType) => {
         data: data
     })
 }
+
+// 登出相关接口
+export const logoutApi = () => {
+    return requests({
+        method: 'POST',
+        url: '/app-api/conduct/user/logout'
+    })
+}
