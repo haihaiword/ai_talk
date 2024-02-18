@@ -15,13 +15,20 @@
                         <div class="mess-image" v-if="item.role === 'user'">
                             <el-image :src="url.user" fit="cover" />
                         </div>
+                        <div v-if="item.role === 'assistant'&&state.isShowMap.get(item.id)" :class="{'look-message': item.badContent?.length > 0}">
+                        <div   v-for="(num, index) in item.badContent" :key="index">{{ index+1 }}.{{num}}</div>
+                       </div>
                         <!-- 修改按钮 -->
                         <div class="edit-mess-box" v-if="item.role === 'assistant'">
                             <el-button :icon="Close" type="danger" @click="CloseView"
                                 v-if="state.messCheckedVal === item.id" circle />
+                                
                             <el-button :icon="Check" @click="submitModify" v-if="state.messCheckedVal === item.id" circle />
-                            <el-button circle type="primary" v-if="state.messCheckedVal !== item.id"
+                            <el-button circle type="primary" v-if="state.messCheckedVal !== item.id && item.badContent?.length > 0"
+                                @click="lookMessage(item.id)" plain>查</el-button>
+                            <el-button circle type="primary" v-if="state.messCheckedVal !== item.id && item.badContent?.length > 0"
                                 @click="selectMessage(item)" plain>修</el-button>
+                            
                         </div>
                         <!-- 消息 -->
                         <div class="message-content">
@@ -47,6 +54,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- 右边的头像 -->
                         <div class="mess-image" v-if="item.role === 'assistant'">
                             <el-image :src="url.robot" fit="cover" />
@@ -89,6 +97,8 @@ const state = reactive({
         fansId: 0, //粉丝ID
     },
     total: 0, //总数
+    isshow:false,//是否显示
+    isShowMap: new Map,
     messModifyList: [
         {
             content: ''
@@ -259,7 +269,11 @@ const selectMessage = (val: any) => {
         resetting(val.id)
     }
 }
-
+const lookMessage=(id: number)=>{
+    let isShow = state.isShowMap.get(id)
+    isShow = !isShow
+    state.isShowMap.set(id, isShow)
+}
 const fixContentArrList = (fixContentArr: string[], id: number) => {
     // 如果修改过了，就是直接编辑了
     if (fixContentArr) {
@@ -324,12 +338,14 @@ const toSubmitAll = async () => {
 }
 // 提交方法
 const toSubmitAllMethosd = async () => {
-    let res = await submitToApi(state.params.fansId)
+    let res:any = await submitToApi(state.params.fansId)
     if (res.data) {
         ElMessage.success('提交成功')
         state.valuePresent = false
         emit('submitAll', state.params.fansId)
         resetView()
+    } else {
+        ElMessage.error(res.msg)
     }
 }
 
@@ -391,7 +407,15 @@ defineExpose({
             display: flex;
             min-height: 50px;
             padding: 20px 0;
-
+           
+            .look-message{
+                max-width: 50%;
+                border: 1px solid rgb(184, 184, 184);
+                border-radius: 5px;
+                padding: 10px;
+                word-break: break-all;
+                margin-right: 10px;
+            }
             .edit-mess-box {
                 margin-top: 8px;
                 margin-right: 10px;

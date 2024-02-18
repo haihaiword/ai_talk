@@ -39,6 +39,7 @@ export type sessionListType = {
     flag: number
     remark: string
     createTime: string
+    badContent:Array<string>   
 }
 
 /* 

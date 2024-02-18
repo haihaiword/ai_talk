@@ -116,7 +116,7 @@ requests.interceptors.response.use((response) => {
     const res = response.data;
 
     // 根据状态码处理
-    if (res.msg === 'Unauthorized') {
+    if (res.code === 401) {
         ElMessageBox.alert('登录超时,请重新登录', '提示', {
             confirmButtonText: 'OK',
             callback: () => {
